@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CelebWeave - Premium Event Planning & Vendor Marketplace for Nigerian Celebrations">
+    <title>CelebWeave - Plan Your Perfect Celebration | Event & Vendor Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { scroll-behavior: smooth; }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; }
+        .display-font { font-family: 'Playfair Display', serif; }
+        
+        .gradient-celebration { background: linear-gradient(135deg, #5B3A96 0%, #8B5CF6 100%); }
+        .gradient-gold { background: linear-gradient(135deg, #D4AF37 0%, #F59E0B 100%); }
+        .gradient-pink { background: linear-gradient(135deg, #EC4899 0%, #F472B6 100%); }
+        
+        .hero-bg { 
+            background: linear-gradient(135deg, #5B3A96 0%, #8B5CF6 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            top: -150px;
+            right: -150px;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .hero-bg::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            bottom: -50px;
+            left: -50px;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(20px); }
+        }
+        
+        .search-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
+        
+        .search-card:hover {
+            box-shadow: 0 30px 80px rgba(0,0,0,0.2);
+            transform: translateY(-4px);
+        }
+        
+        .vendor-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+        }
+        
+        .vendor-card:hover {
+            border-color: #8B5CF6;
+            box-shadow: 0 12px 32px rgba(139, 92, 246, 0.15);
+            transform: translateY(-4px);
+        }
+        
+        .vendor-image {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            background: linear-gradient(135deg, #f5f0ff 0%, #fef3c7 100%);
+        }
+        
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+        }
+        
+        .star { color: #FCD34D; }
+        
+        .category-badge {
+            display: inline-block;
+            background: #F3F4F6;
+            color: #5B3A96;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 4px 4px 4px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .category-badge:hover,
+        .category-badge.active {
+            background: #8B5CF6;
+            color: white;
+        }
+        
+        .feature-box {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            border: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .feature-box:hover {
+            border-color: #8B5CF6;
+            box-shadow: 0 12px 32px rgba(139, 92, 246, 0.1);
+            transform: translateY(-4px);
+        }
+        
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        .btn-primary {
+            @apply bg-gradient-to-r from-purple-600 to-purple-700 text-white px-8 py-3 rounded-lg font-600 hover:shadow-lg transition inline-block;
+        }
+        
+        .btn-secondary {
+            @apply border-2 border-purple-600 text-purple-600 px-8 py-3 rounded-lg font-600 hover:bg-purple-50 transition inline-block;
+        }
+        
+        .btn-outline {
+            @apply border-2 border-gray-300 text-gray-700 px-6 py-2 rounded-lg font-500 hover:border-purple-600 hover:text-purple-600 transition;
+        }
+        
+        .navbar-sticky {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: white;
+            border-bottom: 1px solid #f0f0f0;
+            backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.95);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .section-padding { padding: 80px 0; }
+        
+        .testimonial-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border-left: 4px solid #8B5CF6;
+            transition: all 0.3s ease;
+        }
+        
+        .testimonial-card:hover {
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.1);
+        }
+        
+        .step-number {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #f0f0f0;
+        }
+        
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .price-card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            border: 2px solid #f0f0f0;
+            transition: all 0.3s ease;
+        }
+        
+        .price-card:hover {
+            border-color: #8B5CF6;
+            box-shadow: 0 20px 50px rgba(139, 92, 246, 0.15);
+            transform: translateY(-8px);
+        }
+        
+        .price-card.featured {
+            border-color: #8B5CF6;
+            background: linear-gradient(135deg, #f5f0ff 0%, white 100%);
+        }
+        
+        .badge-trust {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #f0f9ff;
+            color: #0369a1;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .faq-item {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 12px;
+            border: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-item:hover {
+            border-color: #8B5CF6;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.1);
+        }
+        
+        .faq-item.active {
+            background: #f5f0ff;
+            border-color: #8B5CF6;
+        }
+        
+        .category-grid-item {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            border: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+        }
+        
+        .category-grid-item:hover {
+            border-color: #8B5CF6;
+            box-shadow: 0 12px 32px rgba(139, 92, 246, 0.1);
+            transform: translateY(-4px);
+        }
+        
+        .success-story {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+        }
+        
+        .success-story:hover {
+            box-shadow: 0 12px 32px rgba(139, 92, 246, 0.15);
+            transform: translateY(-4px);
+        }
+        
+        .success-story-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #f5f0ff 0%, #fef3c7 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+        }
+        
+        .blog-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+        }
+        
+        .blog-card:hover {
+            box-shadow: 0 12px 32px rgba(139, 92, 246, 0.15);
+            transform: translateY(-4px);
+        }
+        
+        .blog-image {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(135deg, #f5f0ff 0%, #fef3c7 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-left: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+        }
+        
+        @media (max-width: 768px) {
+            .section-padding { padding: 48px 0; }
+            .display-font { font-size: 32px !important; }
+            .grid-cols-1 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body class="bg-white">
+    <!-- Navigation -->
+    <nav class="navbar-sticky">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <span class="text-3xl">🎉</span>
+                <span class="display-font text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">CelebWeave</span>
+            </div>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#explore" class="text-gray-700 hover:text-purple-600 transition font-500 text-sm">Explore</a>
+                <a href="#categories" class="text-gray-700 hover:text-purple-600 transition font-500 text-sm">Categories</a>
+                <a href="#howitworks" class="text-gray-700 hover:text-purple-600 transition font-500 text-sm">How It Works</a>
+                <a href="#pricing" class="text-gray-700 hover:text-purple-600 transition font-500 text-sm">Pricing</a>
+                <a href="#faq" class="text-gray-700 hover:text-purple-600 transition font-500 text-sm">FAQ</a>
+                <button class="btn-primary text-sm">Get Started</button>
+            </div>
+            <button class="md:hidden text-2xl text-gray-600">☰</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-bg text-white relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h1 class="display-font text-5xl md:text-6xl font-bold mb-6 leading-tight">
+                        Plan Your Perfect Celebration
+                    </h1>
+                    <p class="text-xl text-white/90 mb-8 leading-relaxed">
+                        All-in-one platform to create events, coordinate Aso Ebi, manage RSVPs with QR codes, and discover trusted vendors—stress-free.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <button class="bg-white text-purple-600 px-8 py-4 rounded-lg font-bold hover:bg-gray-100 transition">Get Started Free</button>
+                        <button class="border-2 border-white text-white px-8 py-4 rounded-lg font-bold hover:bg-white/10 transition">Watch Demo</button>
+                    </div>
+                    <p class="text-sm text-white/80 mt-6">✓ Free for first event  ✓ No credit card needed  ✓ Join 5,000+ event organizers</p>
+                </div>
+                <div class="hidden md:block">
+                    <div style="background: rgba(255,255,255,0.1); border-radius: 16px; padding: 40px; text-align: center;">
+                        <div style="font-size: 100px; margin-bottom: 20px;">🎊</div>
+                        <p style="color: white/90; margin: 0;">Celebrate without stress</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Card Below Hero -->
+            <div class="search-card p-8 md:p-12 max-w-4xl mx-auto mt-16">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-600 text-gray-700 mb-3">What are you planning?</label>
+                        <select class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            <option>Wedding</option>
+                            <option>Birthday</option>
+                            <option>Corporate Event</option>
+                            <option>Naming Ceremony</option>
+                            <option>Engagement Party</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-600 text-gray-700 mb-3">What do you need?</label>
+                        <select class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            <option>All Vendors</option>
+                            <option>Photographer</option>
+                            <option>Caterer</option>
+                            <option>DJ/Music</option>
+                            <option>Decorator</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-600 text-gray-700 mb-3">Location</label>
+                        <select class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            <option>Lagos</option>
+                            <option>Abuja</option>
+                            <option>Port Harcourt</option>
+                            <option>Ibadan</option>
+                            <option>Accra</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="w-full btn-primary py-4 text-lg">Search Vendors & Services</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trust Section -->
+    <div class="section-padding bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+                <div class="stat-card">
+                    <div class="stat-number mb-2">5,000+</div>
+                    <p class="text-gray-600 font-500">Events Hosted</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number mb-2">50,000+</div>
+                    <p class="text-gray-600 font-500">Happy Guests</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number mb-2">1,200+</div>
+                    <p class="text-gray-600 font-500">Verified Vendors</p>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number mb-2">4.9★</div>
+                    <p class="text-gray-600 font-500">Average Rating</p>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <p class="text-gray-600 font-500 mb-6">Trusted by event organizers across Africa</p>
+                <div class="flex flex-wrap justify-center gap-8 items-center opacity-60">
+                    <span class="font-bold text-gray-800">🏆 Best Event Platform 2024</span>
+                    <span class="font-bold text-gray-800">✓ Verified & Secure</span>
+                    <span class="font-bold text-gray-800">📱 Mobile Friendly</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Categories -->
+    <div id="categories" class="section-padding">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-2xl mx-auto text-center mb-16">
+                <h2 class="display-font text-4xl font-bold mb-4">Plan Any Celebration</h2>
+                <p class="text-lg text-gray-600">From intimate gatherings to grand celebrations</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="category-grid-item">
+                    <div style="font-size: 60px; margin-bottom: 16px;">💍</div>
+                    <h3 class="font-bold text-xl mb-2">Weddings</h3>
+                    <p class="text-gray-600 text-sm mb-4">Complete wedding planning from vendor discovery to QR-code RSVPs</p>
+                    <a href="#" class="text-purple-600 font-600 text-sm hover:text-purple-700">Explore →</a>
+                </div>
+
+                <div class="category-grid-item">
+                    <div style="font-size: 60px; margin-bottom: 16px;">🎂</div>
+                    <h3 class="font-bold text-xl mb-2">Birthdays</h3>
+                    <p class="text-gray-600 text-sm mb-4">Plan the perfect birthday with decorators, entertainers, caterers</p>
+                    <a href="#" class="text-purple-600 font-600 text-sm hover:text-purple-700">Explore →</a>
+                </div>
+
+                <div class="category-grid-item">
+                    <div style="font-size: 60px; margin-bottom: 16px;">👶</div>
+                    <h3 class="font-bold text-xl mb-2">Naming Ceremonies</h3>
+                    <p class="text-gray-600 text-sm mb-4">Traditional celebrations made modern with digital management</p>
+                    <a href="#" class="text-purple-600 font-600 text-sm hover:text-purple-700">Explore →</a>
+                </div>
+
+                <div class="category-grid-item">
+                    <div style="font-size: 60px; margin-bottom: 16px;">💼</div>
+                    <h3 class="font-bold text-xl mb-2">Corporate Events</h3>
+                    <p class="text-gray-600 text-sm mb-4">Professional event management for conferences and gala dinners</p>
+                    <a href="#" class="text-purple-600 font-600 text-sm hover:text-purple-700">Explore →</a>
+                </div>
+
+                <div class="category-grid-item">
+                    <div style="font-size: 60px; margin-bottom: 16px;">💒</div>
+                    <h3 class="font-bold text-xl mb-2">Engagement Parties</h3>
+                    <p class="text-gray-600 text-sm mb-4">Celebrate your engagement with trusted vendors and loved ones</p>
+                    <a href="#" class="text-purple-600 font-600 text-sm hover:text-purple-700">Explore →</a>
+                </div>
+
+                <div class="category-grid-item">
+                    <div style="font-size: 60px; margin-bottom: 16px;">🎓</div>
+                    <h3 class="font-bold text-xl mb-2">Graduations</h3>
+                    <p class="text-gray-600 text-sm mb-4">Honor achievements with beautiful graduation celebrations</p>
+                    <a href="#" class="text-purple-600 font-600 text-sm hover:text-purple-700">Explore →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features -->
+    <div id="explore" class="section-padding bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-2xl mx-auto text-center mb-16">
+                <h2 class="display-font text-4xl font-bold mb-4">Powerful Features</h2>
+                <p class="text-lg text-gray-600">Everything you need to plan and execute flawlessly</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                <div class="bg-white p-8 rounded-12px border border-gray-200 rounded-lg">
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="text-4xl">📱</div>
+                        <div>
+                            <h3 class="font-bold text-xl mb-2">Smart QR RSVPs</h3>
+                            <p class="text-gray-600">Generate unique QR codes per guest. Track RSVPs in real-time. Mobile scanning at your event.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-12px border border-gray-200 rounded-lg">
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="text-4xl">👗</div>
+                        <div>
+                            <h3 class="font-bold text-xl mb-2">Aso Ebi Coordination</h3>
+                            <p class="text-gray-600">Create Aso Ebi store, manage color/size selections, process secure payments.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-12px border border-gray-200 rounded-lg">
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="text-4xl">💼</div>
+                        <div>
+                            <h3 class="font-bold text-xl mb-2">Vendor Marketplace</h3>
+                            <p class="text-gray-600">Browse 1,200+ vetted vendors. Compare prices, reviews, and portfolios. Book directly.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-12px border border-gray-200 rounded-lg">
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="text-4xl">📊</div>
+                        <div>
+                            <h3 class="font-bold text-xl mb-2">Real-Time Analytics</h3>
+                            <p class="text-gray-600">Live attendance tracking, check-in timeline, guest analytics, export reports.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-12px border border-gray-200 rounded-lg">
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="text-4xl">✉️</div>
+                        <div>
+                            <h3 class="font-bold text-xl mb-2">Email Automation</h3>
+                            <p class="text-gray-600">Auto send invitations, reminders, and confirmations. Customizable templates.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-12px border border-gray-200 rounded-lg">
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="text-4xl">🔐</div>
+                        <div>
+                            <h3 class="font-bold text-xl mb-2">Secure & GDPR Compliant</h3>
+                            <p class="text-gray-600">Bank-level security, encrypted QR codes, GDPR data protection, guest privacy.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How It Works -->
+    <div id="howitworks" class="section-padding">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-2xl mx-auto text-center mb-16">
+                <h2 class="display-font text-4xl font-bold mb-4">How It Works</h2>
+                <p class="text-lg text-gray-600">4 simple steps to execute your perfect event</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="timeline-item">
+                    <div class="step-number mx-auto mb-6" style="width: 64px; height: 64px; font-size: 24px;">1</div>
+                    <h3 class="font-bold text-xl mb-3">Create Event</h3>
+                    <p class="text-gray-600 text-sm">Set event details—date, venue, theme, guest count, and budget. All info in one dashboard.</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="step-number mx-auto mb-6" style="width: 64px; height: 64px; font-size: 24px;">2</div>
+                    <h3 class="font-bold text-xl mb-3">Add Guests & Vendors</h3>
+                    <p class="text-gray-600 text-sm">Upload guest list (CSV), browse vendors, book services. Everything syncs automatically.</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="step-number mx-auto mb-6" style="width: 64px; height: 64px; font-size: 24px;">3</div>
+                    <h3 class="font-bold text-xl mb-3">Send Invitations</h3>
+                    <p class="text-gray-600 text-sm">Auto-generate unique QR per guest, send invite emails, manage RSVPs, send reminders.</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="step-number mx-auto mb-6" style="width: 64px; height: 64px; font-size: 24px;">4</div>
+                    <h3 class="font-bold text-xl mb-3">Scan & Celebrate</h3>
+                    <p class="text-gray-600 text-sm">Scan QR codes at event, track attendance in real-time, get final reports & analytics.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vendor Showcase -->
+    <div class="section-padding bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-2xl mx-auto text-center mb-16">
+                <h2 class="display-font text-4xl font-bold mb-4">Discover Trusted Vendors</h2>
+                <p class="text-lg text-gray-600">1,200+ verified professionals ready to make your event amazing</p>
+            </div>
+
+            <div class="mb-12 flex flex-wrap justify-center gap-3">
+                <button class="category-badge active">All Categories</button>
+                <button class="category-badge">Photographers</button>
+                <button class="category-badge">Caterers</button>
+                <button class="category-badge">DJs/Entertainment</button>
+                <button class="category-badge">Decorators</button>
+                <button class="category-badge">Makeup Artists</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <div class="vendor-card">
+                    <div class="vendor-image">📸</div>
+                    <div class="p-6">
+                        <div class="badge-trust mb-3">
+                            <i class="fas fa-check-circle"></i> Verified
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Golden Lens Photography</h3>
+                        <p class="text-sm text-gray-600 mb-4">Professional event photography with 10+ years experience</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="rating">
+                                <span class="star">★★★★★</span>
+                                <span class="text-gray-600 font-600">4.8</span>
+                            </div>
+                            <span class="text-xs text-gray-600">(124)</span>
+                        </div>
+                        <p class="text-sm font-bold text-purple-600 mb-4">₦500,000+</p>
+                        <button class="w-full btn-outline text-sm">View Profile</button>
+                    </div>
+                </div>
+
+                <div class="vendor-card">
+                    <div class="vendor-image">🍽️</div>
+                    <div class="p-6">
+                        <div class="badge-trust mb-3">
+                            <i class="fas fa-check-circle"></i> Verified
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Delicious Catering</h3>
+                        <p class="text-sm text-gray-600 mb-4">Premium catering with authentic Nigerian & continental cuisine</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="rating">
+                                <span class="star">★★★★★</span>
+                                <span class="text-gray-600 font-600">4.9</span>
+                            </div>
+                            <span class="text-xs text-gray-600">(89)</span>
+                        </div>
+                        <p class="text-sm font-bold text-purple-600 mb-4">₦200/plate</p>
+                        <button class="w-full btn-outline text-sm">View Profile</button>
+                    </div>
+                </div>
+
+                <div class="vendor-card">
+                    <div class="vendor-image">🎵</div>
+                    <div class="p-6">
+                        <div class="badge-trust mb-3">
+                            <i class="fas fa-check-circle"></i> Verified
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">DJ Vibes Entertainment</h3>
+                        <p class="text-sm text-gray-600 mb-4">High-energy DJs with live mixing and crowd engagement</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="rating">
+                                <span class="star">★★★★★</span>
+                                <span class="text-gray-600 font-600">4.7</span>
+                            </div>
+                            <span class="text-xs text-gray-600">(156)</span>
+                        </div>
+                        <p class="text-sm font-bold text-purple-600 mb-4">₦150,000+</p>
+                        <button class="w-full btn-outline text-sm">View Profile</button>
+                    </div>
+                </div>
+
+                <div class="vendor-card">
+                    <div class="vendor-image">🎀</div>
+                    <div class="p-6">
+                        <div class="badge-trust mb-3">
+                            <i class="fas fa-check-circle"></i> Verified
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Elegant Decorations</h3>
+                        <p class="text-sm text-gray-600 mb-4">Stunning decor designs that transform any venue</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="rating">
+                                <span class="star">★★★★★</span>
+                                <span class="text-gray-600 font-600">4.8</span>
+                            </div>
+                            <span class="text-xs text-gray-600">(98)</span>
+                        </div>
+                        <p class="text-sm font-bold text-purple-600 mb-4">₦300,000+</p>
+                        <button class="w-full btn-outline text-sm">View Profile</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button class="btn-primary">Browse All Vendors →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Stories -->
+    <div class="section-padding">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-2xl mx-auto text-center mb-16">
+                <h2 class="display-font text-4xl font-bold mb-4">Success Stories</h2>
+                <p class="text-lg text-gray-600">Real celebrations planned and executed perfectly on CelebWeave</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="success-story">
+                    <div class="success-story-image">💍</div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">Sarah & John's Dream Wedding</h3>
+                        <p class="text-sm text-gray-600 mb-4">120 guests coordinated, 100% QR check-in rate, Aso Ebi sales ₦2.5M</p>
+                        <div class="flex gap-3 mb-4">
+                            <span class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full">Wedding</span>
+                            <span class="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full">Lagos</span>
+                        </div>
+                        <p class="text-sm font-600 text-gray-700">"CelebWeave saved us weeks of planning. The QR system was a game-changer!"</p>
+                    </div>
+                </div>
+
+                <div class="success-story">
+                    <div class="success-story-image">🎂</div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">Chioma's 30th Birthday Bash</h3>
+                        <p class="text-sm text-gray-600 mb-4">85 guests, 5 vendors booked, real-time attendance tracking</p>
+                        <div class="flex gap-3 mb-4">
+                            <span class="text-xs bg-pink-100 text-pink-700 px-3 py-1 rounded-full">Birthday</span>
+                            <span class="text-xs bg-pink-100 text-pink-700 px-3 py-1 rounded-full">Lagos</span>
+                        </div>
+                        <p class="text-sm font-600 text-gray-700">"Everything was organized perfectly. Vendors coordinated like a dream!"</p>
+                    </div>
+                </div>
+
+                <div class="success-story">
+                    <div class="success-story-image">💼</div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">TechCorp Annual Gala</h3>
+                        <p class="text-sm text-gray-600 mb-4">500 guests, 89% attendance rate, real-time RSVPs, check-in in 2 hours</p>
+                        <div class="flex gap-3 mb-4">
+                            <span class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full">Corporate</span>
+                            <span class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full">Lagos</span>
+                        </div>
+                        <p class="text-sm font-600 text-gray-700">"The analytics dashboard gave us real-time insights. Highly professional!"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pricing -->
+    <div id="pricing" class="section-padding bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-2xl mx-auto text-center mb-16">
+                <h2 class="display-font text-4xl font-bold mb-4">Simple, Transparent Pricing</h2>
+                <p class="text-lg text-gray-600">Choose a plan that fits your celebration size</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="price-card">
+                    <h3 class="font-bold text-2xl mb-2">Starter</h3>
+                    <p class="text-gray-600 text-sm mb-6">Perfect for small celebrations</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold text-purple-600">Free</span>
+                        <p class="text-sm text-gray-600 mt-2">First event always free</p>
+                    </div>
+                    <ul class="space-y-3 mb-8 text-sm">
+                        <li>✓ 1 event</li>
+                        <li>✓ Up to 50 guests</li>
+                        <li>✓ QR code generation</li>
+                        <li>✓ Basic analytics</li>
+                        <li>✗ Aso Ebi coordination</li>
+                        <li>✗ Vendor marketplace access</li>
+                    </ul>
+                    <button class="w-full btn-secondary">Get Started</button>
+                </div>
+
+                <div class="price-card featured">
+                    <div style="background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); color: white; margin: -40px -40px 20px -40px; padding: 12px 20px; text-align: center; font-size: 12px; font-weight: 600;">MOST POPULAR</div>
+                    <h3 class="font-bold text-2xl mb-2">Premium</h3>
+                    <p class="text-gray-600 text-sm mb-6">For unforgettable celebrations</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold text-purple-600">₦4,999</span>
+                        <p class="text-sm text-gray-600 mt-2">Per event</p>
+                    </div>
+                    <ul class="space-y-3 mb-8 text-sm">
+                        <li>✓ Unlimited events</li>
+                        <li>✓ Up to 500 guests</li>
+                        <li>✓ Advanced QR system</li>
+                        <li>✓ Full analytics</li>
+                        <li>✓ Aso Ebi store</li>
+                        <li>✓ Vendor marketplace</li>
+                    </ul>
+                    <button class="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white px-8 py-3 rounded-lg font-600 hover:shadow-lg transition">Start Premium</button>
+                </div>
+
+                <div class="price-card">
+                    <h3 class="font-bold text-2xl mb-2">Business</h3>
+                    <p class="text-gray-600 text-sm mb-6">For enterprise needs</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold text-purple-600">₦24,999</span>
+                        <p class="text-sm text-gray-600 mt-2">Per month</p>
+                    </div>
+                    <ul class="space-y-3 mb-8 text-sm">
+                        <li>✓ Unlimited everything</li>
+                        <li>✓ Unlimited guests</li>
+                        <li>✓ All features included</li>
+                        <li>✓ Priority support</li>
+                        <li>✓ Custom branding</li>
+                        <li>✓ API access</li>
+                    </ul>
+                    <button class="w-full btn-secondary">Contact Sales</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ -->
+    <div id="faq" class="section-padding">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-2xl mx-auto text-center mb-16">
+                <h2 class="display-font text-4xl font-bold mb-4">Frequently Asked Questions</h2>
+                <p class="text-lg text-gray-600">Got questions? We've got answers</p>
+            </div>
+
+            <div class="max-w-3xl mx-auto space-y-4">
+                <div class="faq-item active" onclick="this.classList.toggle('active')">
+                    <div class="flex justify-between items-center cursor-pointer">
+                        <h3 class="font-bold text-lg">How do QR codes work on CelebWeave?</h3>
+                        <span class="text-2xl">+</span>
+                    </div>
+                    <p class="text-gray-600 mt-4" style="display: block;">Each guest gets a unique QR code. Scan it at your event to instantly check them in. No duplicate scans allowed—perfect fraud prevention!</p>
+                </div>
+
+                <div class="faq-item" onclick="this.classList.toggle('active')">
+                    <div class="flex justify-between items-center cursor-pointer">
+                        <h3 class="font-bold text-lg">Can I import guest lists from Excel?</h3>
+                        <span class="text-2xl">+</span>
+                    </div>
+                    <p class="text-gray-600 mt-4" style="display: none;">Yes! Bulk import up to 5,000 guests via CSV. Just format as: name, email, phone. QR codes auto-generate and invites send automatically.</p>
+                </div>
+
+                <div class="faq-item" onclick="this.classList.toggle('active')">
+                    <div class="flex justify-between items-center cursor-pointer">
+                        <h3 class="font-bold text-lg">How does Aso Ebi coordination work?</h3>
+                        <span class="text-2xl">+</span>
+                    </div>
+                    <p class="text-gray-600 mt-4" style="display: none;">Create your Aso Ebi store, set colors/sizes, and share with guests. They select their preferences and pay securely. Track all orders in your dashboard.</p>
+                </div>
+
+                <div class="faq-item" onclick="this.classList.toggle('active')">
+                    <div class="flex justify-between items-center cursor-pointer">
+                        <h3 class="font-bold text-lg">Is my guest data secure?</h3>
+                        <span class="text-2xl">+</span>
+                    </div>
+                    <p class="text-gray-600 mt-4" style="display: none;">100% secure. We use bank-level encryption, GDPR compliance, and never share your data. You have full control over guest information.</p>
+                </div>
+
+                <div class="faq-item" onclick="this.classList.toggle('active')">
+                    <div class="flex justify-between items-center cursor-pointer">
+                        <h3 class="font-bold text-lg">Do I need a QR scanner app?</h3>
+                        <span class="text-2xl">+</span>
+                    </div>
+                    <p class="text-gray-600 mt-4" style="display: none;">Nope! Just use our web-based scanner on any smartphone. It works in any mobile browser—no app download needed.</p>
+                </div>
+
+                <div class="faq-item" onclick="this.classList.toggle('active')">
+                    <div class="flex justify-between items-center cursor-pointer">
+                        <h3 class="font-bold text-lg">Can I see real-time attendance?</h3>
+                        <span class="text-2xl">+</span>
+                    </div>
+                    <p class="text-gray-600 mt-4" style="display: none;">Yes! Live dashboard shows check-ins as they happen. See attendance stats, no-shows, timeline, and detailed reports—all in real-time.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blog/Resources -->
+    <div class="section-padding bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-2xl mx-auto text-center mb-16">
+                <h2 class="display-font text-4xl font-bold mb-4">Event Planning Guides</h2>
+                <p class="text-lg text-gray-600">Tips, trends, and inspiration for your celebration</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="blog-card">
+                    <div class="blog-image">💍</div>
+                    <div class="p-6">
+                        <div class="text-xs text-purple-600 font-bold mb-2">WEDDING PLANNING</div>
+                        <h3 class="font-bold text-lg mb-3">15 Essential Wedding Planning Checklist for Nigerian Couples</h3>
+                        <p class="text-sm text-gray-600 mb-4">Master the art of wedding planning with our comprehensive guide. From timeline to vendor selection...</p>
+                        <div class="flex items-center justify-between text-xs text-gray-500">
+                            <span>8 min read</span>
+                            <a href="#" class="text-purple-600 font-600">Read →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="blog-card">
+                    <div class="blog-image">👗</div>
+                    <div class="p-6">
+                        <div class="text-xs text-purple-600 font-bold mb-2">ASO EBI TRENDS</div>
+                        <h3 class="font-bold text-lg mb-3">2025 Aso Ebi Color Trends & Styling Ideas</h3>
+                        <p class="text-sm text-gray-600 mb-4">Discover trending colors, fabrics, and styles for your celebration. Make your guests shine...</p>
+                        <div class="flex items-center justify-between text-xs text-gray-500">
+                            <span>6 min read</span>
+                            <a href="#" class="text-purple-600 font-600">Read →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="blog-card">
+                    <div class="blog-image">📋</div>
+                    <div class="p-6">
+                        <div class="text-xs text-purple-600 font-bold mb-2">VENDOR TIPS</div>
+                        <h3 class="font-bold text-lg mb-3">How to Choose & Negotiate with Event Vendors</h3>
+                        <p class="text-sm text-gray-600 mb-4">Smart vendor selection strategies. Get the best quality at the best price...</p>
+                        <div class="flex items-center justify-between text-xs text-gray-500">
+                            <span>7 min read</span>
+                            <a href="#" class="text-purple-600 font-600">Read →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12">
+                <button class="btn-secondary">Read More Articles →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Newsletter -->
+    <div class="gradient-celebration text-white py-16">
+        <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="display-font text-4xl font-bold mb-4">Never Miss an Update</h2>
+            <p class="text-xl text-white/90 mb-8">Get event planning tips, vendor updates, and exclusive offers direct to your inbox</p>
+            <div class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                <input type="email" placeholder="Enter your email" class="flex-1 px-4 py-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-white" />
+                <button class="bg-white text-purple-600 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition">Subscribe</button>
+            </div>
+            <p class="text-sm text-white/70 mt-4">✓ No spam  ✓ Unsubscribe anytime  ✓ Tips & inspiration only</p>
+        </div>
+    </div>
+
+    <!-- CTA Final -->
+    <div class="section-padding">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="display-font text-5xl font-bold mb-6">Ready to Plan Your Perfect Celebration?</h2>
+            <p class="text-xl text-gray-600 mb-12">Join 5,000+ event organizers who've made their celebrations stress-free on CelebWeave</p>
+            <div class="flex flex-wrap gap-4 justify-center">
+                <button class="btn-primary px-12 py-4 text-lg">Get Started Free</button>
+                <button class="btn-secondary px-12 py-4 text-lg">Schedule a Demo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-2xl">🎉</span>
+                        <span class="display-font font-bold text-white text-xl">CelebWeave</span>
+                    </div>
+                    <p class="text-sm">Plan. Coordinate. Celebrate without stress.</p>
+                    <div class="flex gap-4 mt-4">
+                        <a href="#" class="hover:text-white transition">f</a>
+                        <a href="#" class="hover:text-white transition">𝕏</a>
+                        <a href="#" class="hover:text-white transition">📷</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white mb-4">Platform</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition">For Organizers</a></li>
+                        <li><a href="#" class="hover:text-white transition">For Vendors</a></li>
+                        <li><a href="#" class="hover:text-white transition">Pricing</a></li>
+                        <li><a href="#" class="hover:text-white transition">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white mb-4">Company</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition">About Us</a></li>
+                        <li><a href="#" class="hover:text-white transition">Careers</a></li>
+                        <li><a href="#" class="hover:text-white transition">Contact</a></li>
+                        <li><a href="#" class="hover:text-white transition">Press</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white mb-4">Resources</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition">Help Center</a></li>
+                        <li><a href="#" class="hover:text-white transition">API Docs</a></li>
+                        <li><a href="#" class="hover:text-white transition">Partners</a></li>
+                        <li><a href="#" class="hover:text-white transition">Status</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white mb-4">Legal</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-white transition">Security</a></li>
+                        <li><a href="#" class="hover:text-white transition">Cookies</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 text-center text-sm">
+                <p>&copy; 2025 CelebWeave. All rights reserved. Celebrate without stress. | Made with ❤️ for African celebrations</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.md\\:hidden').addEventListener('click', function() {
+            const menu = document.querySelector('nav');
+            menu.classList.toggle('mobile-open');
+        });
+
+        // Category badge filtering
+        document.querySelectorAll('.category-badge').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.category-badge').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bodrock QR Manager - WordPress Plugin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * { scroll-behavior: smooth; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+        .wp-admin-wrapper { display: flex; min-height: 100vh; background: #f1f1f1; }
+        .wp-sidebar { width: 160px; background: #0a0e27; color: white; position: fixed; height: 100vh; left: 0; top: 0; overflow-y: auto; }
+        .wp-content { margin-left: 160px; flex: 1; padding: 20px; }
+        .wp-header { background: white; padding: 15px 20px; border-bottom: 1px solid #ccc; margin-bottom: 20px; border-radius: 3px; display: flex; justify-content: space-between; align-items: center; }
+        .nav-link { display: block; padding: 12px 15px; color: #8892a0; text-decoration: none; border-left: 3px solid transparent; transition: all 0.2s; }
+        .nav-link:hover { color: white; background: rgba(255,255,255,0.05); }
+        .nav-link.active { color: white; background: #2271b1; border-left-color: #2271b1; }
+        .nav-section { padding: 15px 0; border-top: 1px solid #1e2d3d; }
+        .nav-section-title { padding: 10px 15px; font-size: 11px; text-transform: uppercase; color: #5a6d7d; font-weight: 600; }
+        .card { background: white; border: 1px solid #ccc; border-radius: 4px; padding: 20px; margin-bottom: 20px; }
+        .card-header { border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px; }
+        .card-header h2 { margin: 0; font-size: 18px; }
+        .card-header .subtitle { color: #666; font-size: 13px; margin-top: 5px; }
+        .btn { display: inline-block; padding: 8px 16px; border: none; border-radius: 3px; cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.2s; }
+        .btn-primary { background: #2271b1; color: white; }
+        .btn-primary:hover { background: #135e96; }
+        .btn-secondary { background: #f0f0f0; color: #333; }
+        .btn-secondary:hover { background: #e0e0e0; }
+        .btn-small { padding: 5px 10px; font-size: 12px; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-danger:hover { background: #c82333; }
+        .btn-success { background: #10a981; color: white; }
+        .btn-success:hover { background: #089070; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 500; margin-bottom: 8px; font-size: 13px; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 3px; font-size: 13px; }
+        .form-group textarea { resize: vertical; min-height: 100px; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #2271b1; box-shadow: 0 0 0 1px #2271b1; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .table th { background: #f5f5f5; padding: 12px; text-align: left; font-weight: 600; border-bottom: 2px solid #ddd; }
+        .table td { padding: 12px; border-bottom: 1px solid #eee; }
+        .table tr:hover { background: #f9f9f9; }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+        .badge-success { background: #d4edda; color: #155724; }
+        .badge-warning { background: #fff3cd; color: #856404; }
+        .badge-danger { background: #f8d7da; color: #721c24; }
+        .badge-info { background: #d1ecf1; color: #0c5460; }
+        .stat-box { background: white; border: 1px solid #ccc; border-radius: 4px; padding: 20px; text-align: center; }
+        .stat-number { font-size: 28px; font-weight: bold; color: #2271b1; }
+        .stat-label { font-size: 13px; color: #666; margin-top: 5px; }
+        .alert { padding: 12px 15px; border-radius: 4px; margin-bottom: 20px; }
+        .alert-success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .alert-warning { background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; }
+        .alert-danger { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .alert-info { background: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; }
+        .tab-nav { display: flex; gap: 0; border-bottom: 1px solid #ccc; margin-bottom: 20px; }
+        .tab-nav button { padding: 12px 20px; background: none; border: none; cursor: pointer; font-size: 13px; font-weight: 500; color: #666; border-bottom: 3px solid transparent; }
+        .tab-nav button.active { color: #2271b1; border-bottom-color: #2271b1; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: white; border-radius: 4px; padding: 30px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-header h2 { margin: 0; }
+        .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: #666; }
+        .qr-preview { text-align: center; padding: 20px; background: #f5f5f5; border-radius: 4px; margin: 20px 0; }
+        .qr-preview img { max-width: 200px; }
+        .scanner-preview { width: 100%; max-width: 400px; border-radius: 4px; background: #000; margin: 20px auto; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+        .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px; }
+        .plugin-badge { background: #2271b1; color: white; padding: 3px 8px; border-radius: 3px; font-size: 11px; margin-left: 5px; }
+        @media (max-width: 768px) {
+            .wp-sidebar { width: 50px; }
+            .wp-content { margin-left: 50px; }
+            .nav-link span { display: none; }
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="wp-admin-wrapper">
+        <!-- Sidebar -->
+        <div class="wp-sidebar">
+            <div style="padding: 15px; border-bottom: 1px solid #1e2d3d;">
+                <div style="font-size: 18px; font-weight: bold; color: #2271b1;">B<span style="display: none;">odrock</span></div>
+                <div style="font-size: 10px; color: #5a6d7d; margin-top: 3px;">QR Manager</div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Main</div>
+                <a href="#" onclick="switchPage('dashboard')" class="nav-link active">
+                    <i class="fas fa-chart-line" style="margin-right: 8px; width: 16px;"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" onclick="switchPage('events')" class="nav-link">
+                    <i class="fas fa-calendar-alt" style="margin-right: 8px; width: 16px;"></i>
+                    <span>Events</span>
+                </a>
+                <a href="#" onclick="switchPage('scanner')" class="nav-link">
+                    <i class="fas fa-qrcode" style="margin-right: 8px; width: 16px;"></i>
+                    <span>Scanner</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Management</div>
+                <a href="#" onclick="switchPage('guests')" class="nav-link">
+                    <i class="fas fa-users" style="margin-right: 8px; width: 16px;"></i>
+                    <span>Guests</span>
+                </a>
+                <a href="#" onclick="switchPage('analytics')" class="nav-link">
+                    <i class="fas fa-chart-bar" style="margin-right: 8px; width: 16px;"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="#" onclick="switchPage('emails')" class="nav-link">
+                    <i class="fas fa-envelope" style="margin-right: 8px; width: 16px;"></i>
+                    <span>Emails</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">System</div>
+                <a href="#" onclick="switchPage('integrations')" class="nav-link">
+                    <i class="fas fa-plug" style="margin-right: 8px; width: 16px;"></i>
+                    <span>Integrations</span>
+                </a>
+                <a href="#" onclick="switchPage('settings')" class="nav-link">
+                    <i class="fas fa-cog" style="margin-right: 8px; width: 16px;"></i>
+                    <span>Settings</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="wp-content">
+            <!-- Header -->
+            <div class="wp-header">
+                <div>
+                    <h1 style="margin: 0; font-size: 20px;">Bodrock QR Manager <span class="plugin-badge">v1.0</span></h1>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button id="pluginToggle" class="btn btn-success" onclick="togglePluginActivation()">
+                        <i class="fas fa-power-off"></i> Active
+                    </button>
+                    <span style="font-size: 13px; color: #666;">WordPress Admin</span>
+                </div>
+            </div>
+
+            <!-- Dashboard Page -->
+            <div id="page-dashboard" class="page-content">
+                <div class="alert alert-info">
+                    <strong>Welcome to Bodrock QR Manager!</strong> Manage events, guests, and QR codes from one powerful dashboard.
+                </div>
+
+                <div class="grid-4">
+                    <div class="stat-box">
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">Active Events</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">342</div>
+                        <div class="stat-label">Total Guests</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">287</div>
+                        <div class="stat-label">Check-ins</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">84%</div>
+                        <div class="stat-label">Attendance Rate</div>
+                    </div>
+                </div>
+
+                <div class="grid-2" style="margin-top: 20px;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Recent Events</h2>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Event Name</th>
+                                    <th>Date</th>
+                                    <th>Guests</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Sarah & John Wedding</td>
+                                    <td>Mar 15, 2025</td>
+                                    <td>120</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Chioma Birthday</td>
+                                    <td>Apr 2, 2025</td>
+                                    <td>85</td>
+                                    <td><span class="badge badge-success">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Tech Conference 2025</td>
+                                    <td>May 10, 2025</td>
+                                    <td>500</td>
+                                    <td><span class="badge badge-info">Draft</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Quick Stats</h2>
+                        </div>
+                        <div style="padding: 20px; text-align: center;">
+                            <canvas id="dashboardChart" style="max-width: 100%;"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 20px;">
+                    <div class="card-header">
+                        <h2>System Status</h2>
+                    </div>
+                    <table class="table">
+                        <tr>
+                            <td><strong>Plugin Status</strong></td>
+                            <td><span class="badge badge-success">✓ Active</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Database Tables</strong></td>
+                            <td><span class="badge badge-success">✓ Created</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>QR Storage</strong></td>
+                            <td><span class="badge badge-success">✓ /wp-content/bodrock-qr/</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>WooCommerce Integration</strong></td>
+                            <td><span class="badge badge-success">✓ Connected</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fluent Forms Integration</strong></td>
+                            <td><span class="badge badge-success">✓ Connected</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Elementor Widgets</strong></td>
+                            <td><span class="badge badge-success">✓ Registered</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Listeo Hooks</strong></td>
+                            <td><span class="badge badge-success">✓ Active</span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Events Page -->
+            <div id="page-events" class="page-content" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h2>Events</h2>
+                            <button class="btn btn-primary" onclick="openModal('eventModal')">+ New Event</button>
+                        </div>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Event Name</th>
+                                <th>Date</th>
+                                <th>Location</th>
+                                <th>Guests</th>
+                                <th>QR Codes</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Sarah & John Wedding</strong></td>
+                                <td>Mar 15, 2025</td>
+                                <td>Lekki Gardens</td>
+                                <td>120</td>
+                                <td><span class="badge badge-success">120/120</span></td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>
+                                    <button class="btn btn-secondary btn-small" onclick="alert('Viewing event details')">View</button>
+                                    <button class="btn btn-secondary btn-small" onclick="alert('Editing event')">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Chioma Birthday</strong></td>
+                                <td>Apr 2, 2025</td>
+                                <td>Victoria Island</td>
+                                <td>85</td>
+                                <td><span class="badge badge-warning">78/85</span></td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>
+                                    <button class="btn btn-secondary btn-small" onclick="alert('Viewing event details')">View</button>
+                                    <button class="btn btn-secondary btn-small" onclick="alert('Editing event')">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tech Conference 2025</strong></td>
+                                <td>May 10, 2025</td>
+                                <td>Eko Convention</td>
+                                <td>500</td>
+                                <td><span class="badge badge-danger">0/500</span></td>
+                                <td><span class="badge badge-info">Draft</span></td>
+                                <td>
+                                    <button class="btn btn-secondary btn-small" onclick="alert('Viewing event details')">View</button>
+                                    <button class="btn btn-secondary btn-small" onclick="alert('Editing event')">Edit</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Guests Page -->
+            <div id="page-guests" class="page-content" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h2>Guest Management</h2>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn btn-secondary" onclick="openModal('csvImportModal')">
+                                    <i class="fas fa-upload"></i> Import CSV
+                                </button>
+                                <button class="btn btn-primary" onclick="openModal('addGuestModal')">+ Add Guest</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <input type="text" placeholder="Search guests..." style="width: 300px; padding: 10px; border: 1px solid #ddd; border-radius: 3px;" />
+                    </div>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Event</th>
+                                <th>QR Code</th>
+                                <th>Check-in</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Sarah Johnson</td>
+                                <td>sarah@example.com</td>
+                                <td>+234 123 456</td>
+                                <td>Sarah & John Wedding</td>
+                                <td><span class="badge badge-success">✓ Generated</span></td>
+                                <td>✓ 2:30 PM</td>
+                                <td><span class="badge badge-success">Checked In</span></td>
+                                <td>
+                                    <button class="btn btn-secondary btn-small" onclick="alert('View QR')">QR</button>
+                                    <button class="btn btn-secondary btn-small" onclick="alert('Edit guest')">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Chioma Smith</td>
+                                <td>chioma@example.com</td>
+                                <td>+234 234 567</td>
+                                <td>Sarah & John Wedding</td>
+                                <td><span class="badge badge-success">✓ Generated</span></td>
+                                <td>✓ 2:45 PM</td>
+                                <td><span class="badge badge-success">Checked In</span></td>
+                                <td>
+                                    <button class="btn btn-secondary btn-small" onclick="alert('View QR')">QR</button>
+                                    <button class="btn btn-secondary btn-small" onclick="alert('Edit guest')">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Tunde Williams</td>
+                                <td>tunde@example.com</td>
+                                <td>+234 345 678</td>
+                                <td>Chioma Birthday</td>
+                                <td><span class="badge badge-warning">⏳ Pending</span></td>
+                                <td>-</td>
+                                <td><span class="badge badge-warning">Invited</span></td>
+                                <td>
+                                    <button class="btn btn-secondary btn-small" onclick="alert('Generate QR')">Generate</button>
+                                    <button class="btn btn-secondary btn-small" onclick="alert('Edit guest')">Edit</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Scanner Page -->
+            <div id="page-scanner" class="page-content" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Mobile QR Scanner</h2>
+                        <p class="subtitle">Scan QR codes at your event for instant check-in</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Select Event</label>
+                        <select>
+                            <option>Sarah & John Wedding (Mar 15)</option>
+                            <option>Chioma Birthday (Apr 2)</option>
+                        </select>
+                    </div>
+
+                    <div style="background: #000; border-radius: 4px; padding: 40px; text-align: center; color: white; margin: 20px 0;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">📱</div>
+                        <p style="margin: 0; margin-bottom: 10px; font-size: 14px;">🔴 Camera Feed Simulation</p>
+                        <p style="margin: 0; color: #888; font-size: 12px;">In production, this shows live camera feed</p>
+                    </div>
+
+                    <div style="background: #f5f5f5; border-radius: 4px; padding: 20px; margin: 20px 0;">
+                        <h3 style="margin-top: 0;">Last 5 Check-ins</h3>
+                        <table class="table">
+                            <tr>
+                                <td>Sarah Johnson</td>
+                                <td>2:30 PM</td>
+                                <td><span class="badge badge-success">✓ Valid</span></td>
+                            </tr>
+                            <tr>
+                                <td>Chioma Smith</td>
+                                <td>2:45 PM</td>
+                                <td><span class="badge badge-success">✓ Valid</span></td>
+                            </tr>
+                            <tr>
+                                <td>Grace Williams</td>
+                                <td>3:10 PM</td>
+                                <td><span class="badge badge-success">✓ Valid</span></td>
+                            </tr>
+                            <tr>
+                                <td>John Doe (Duplicate)</td>
+                                <td>3:15 PM</td>
+                                <td><span class="badge badge-danger">✗ Already Checked In</span></td>
+                            </tr>
+                            <tr>
+                                <td>Tunde Obi</td>
+                                <td>3:20 PM</td>
+                                <td><span class="badge badge-success">✓ Valid</span></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="alert('Starting QR scanner in production mode')">
+                        <i class="fas fa-video"></i> Open QR Scanner
+                    </button>
+                </div>
+            </div>
+
+            <!-- Analytics Page -->
+            <div id="page-analytics" class="page-content" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Analytics & Reports</h2>
+                    </div>
+
+                    <div class="grid-2">
+                        <div>
+                            <h3 style="margin-top: 0;">Attendance by Event</h3>
+                            <canvas id="analyticsChart1" style="max-width: 100%;"></canvas>
+                        </div>
+                        <div>
+                            <h3 style="margin-top: 0;">Check-in Timeline</h3>
+                            <canvas id="analyticsChart2" style="max-width: 100%;"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-top: 20px; border: none; padding: 0;">
+                        <h3 style="margin-top: 0;">Detailed Report</h3>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Event</th>
+                                    <th>Total Guests</th>
+                                    <th>Check-ins</th>
+                                    <th>No-Shows</th>
+                                    <th>Attendance %</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Sarah & John Wedding</strong></td>
+                                    <td>120</td>
+                                    <td>105</td>
+                                    <td>15</td>
+                                    <td><strong>87.5%</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Chioma Birthday</strong></td>
+                                    <td>85</td>
+                                    <td>72</td>
+                                    <td>13</td>
+                                    <td><strong>84.7%</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Tech Conference</strong></td>
+                                    <td>500</td>
+                                    <td>445</td>
+                                    <td>55</td>
+                                    <td><strong>89%</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email Templates Page -->
+            <div id="page-emails" class="page-content" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Email Templates</h2>
+                        <p class="subtitle">Customize invitation and notification emails</p>
+                    </div>
+
+                    <div class="tab-nav">
+                        <button class="active" onclick="switchTab('invitation')">Invitation</button>
+                        <button onclick="switchTab('reminder')">Reminder</button>
+                        <button onclick="switchTab('checkin')">Check-in Confirmation</button>
+                    </div>
+
+                    <div id="tab-invitation" class="tab-content active">
+                        <div class="form-group">
+                            <label>Email Subject</label>
+                            <input type="text" value="You're Invited to {EVENT_NAME}!" />
+                        </div>
+                        <div class="form-group">
+                            <label>Email Body</label>
+                            <textarea>Hi {GUEST_NAME},
+
+You're invited to {EVENT_NAME}!
+
+📅 Date: {EVENT_DATE}
+🕐 Time: {EVENT_TIME}
+📍 Location: {EVENT_VENUE}
+
+Please RSVP by {RSVP_DEADLINE}
+
+Your unique QR code is attached. Please save this for check-in.
+
+[QR_CODE_PLACEHOLDER]
+
+Need help? Reply to this email.
+
+Best regards,
+{EVENT_ORGANIZER}</textarea>
+                        </div>
+                        <button class="btn btn-primary" onclick="alert('Email template saved!')">Save Template</button>
+                    </div>
+
+                    <div id="tab-reminder" class="tab-content" style="display: none;">
+                        <div class="alert alert-info">Reminder emails are sent 24 hours before event</div>
+                        <div class="form-group">
+                            <label>Email Subject</label>
+                            <input type="text" value="Reminder: {EVENT_NAME} Tomorrow!" />
+                        </div>
+                        <div class="form-group">
+                            <label>Email Body</label>
+                            <textarea>Hi {GUEST_NAME},
+
+Quick reminder - {EVENT_NAME} is happening tomorrow!
+
+📅 Date: {EVENT_DATE}
+🕐 Time: {EVENT_TIME}
+📍 Location: {EVENT_VENUE}
+
+Don't forget to bring your QR code!
+
+See you there!
+{EVENT_ORGANIZER}</textarea>
+                        </div>
+                        <button class="btn btn-primary" onclick="alert('Email template saved!')">Save Template</button>
+                    </div>
+
+                    <div id="tab-checkin" class="tab-content" style="display: none;">
+                        <div class="alert alert-success">Check-in confirmations sent after successful QR scan</div>
+                        <div class="form-group">
+                            <label>Email Subject</label>
+                            <input type="text" value="Welcome to {EVENT_NAME}!" />
+                        </div>
+                        <div class="form-group">
+                            <label>Email Body</label>
+                            <textarea>Hi {GUEST_NAME},
+
+You've been checked in to {EVENT_NAME}!
+
+Check-in Time: {CHECKIN_TIME}
+Your Seat/Table: {SEAT_INFO}
+
+Thank you for attending!
+
+{EVENT_ORGANIZER}</textarea>
+                        </div>
+                        <button class="btn btn-primary" onclick="alert('Email template saved!')">Save Template</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Integrations Page -->
+            <div id="page-integrations" class="page-content" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Plugin Integrations</h2>
+                        <p class="subtitle">Connect with WordPress plugins and platforms</p>
+                    </div>
+
+                    <div class="grid-2">
+                        <!-- WooCommerce -->
+                        <div style="background: #f5f5f5; padding: 20px; border-radius: 4px; border-left: 4px solid #96588a;">
+                            <h3 style="margin-top: 0; margin-bottom: 10px;">WooCommerce</h3>
+                            <p style="margin: 0 0 15px 0; color: #666; font-size: 13px;">Integrate with WooCommerce orders. Automatically create guest records from customer data.</p>
+                            <span class="badge badge-success">✓ Connected</span>
+                            <div style="margin-top: 10px;">
+                                <p style="margin: 5px 0; font-size: 12px;"><strong>Features:</strong></p>
+                                <ul style="margin: 0; padding-left: 20px; font-size: 12px;">
+                                    <li>Auto-sync customer emails</li>
+                                    <li>Generate QR from orders</li>
+                                    <li>Order-based check-in</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Fluent Forms -->
+                        <div style="background: #f5f5f5; padding: 20px; border-radius: 4px; border-left: 4px solid #0066cc;">
+                            <h3 style="margin-top: 0; margin-bottom: 10px;">Fluent Forms</h3>
+                            <p style="margin: 0 0 15px 0; color: #666; font-size: 13px;">Hook into Fluent Forms submissions. Auto-create guests from form entries.</p>
+                            <span class="badge badge-success">✓ Connected</span>
+                            <div style="margin-top: 10px;">
+                                <p style="margin: 5px 0; font-size: 12px;"><strong>Features:</strong></p>
+                                <ul style="margin: 0; padding-left: 20px; font-size: 12px;">
+                                    <li>Form submission hooks</li>
+                                    <li>Auto QR generation</li>
+                                    <li>Email integration</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Elementor -->
+                        <div style="background: #f5f5f5; padding: 20px; border-radius: 4px; border-left: 4px solid #92003b;">
+                            <h3 style="margin-top: 0; margin-bottom: 10px;">Elementor</h3>
+                            <p style="margin: 0 0 15px 0; color: #666; font-size: 13px;">Custom Elementor widgets for event pages and QR code display.</p>
+                            <span class="badge badge-success">✓ Connected</span>
+                            <div style="margin-top: 10px;">
+                                <p style="margin: 5px 0; font-size: 12px;"><strong>Widgets:</strong></p>
+                                <ul style="margin: 0; padding-left: 20px; font-size: 12px;">
+                                    <li>Event Info Widget</li>
+                                    <li>QR Code Display</li>
+                                    <li>Check-in Form</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Listeo -->
+                        <div style="background: #f5f5f5; padding: 20px; border-radius: 4px; border-left: 4px solid #f39c12;">
+                            <h3 style="margin-top: 0; margin-bottom: 10px;">Listeo</h3>
+                            <p style="margin: 0 0 15px 0; color: #666; font-size: 13px;">Integrate with Listeo marketplace. Vendor event management hooks.</p>
+                            <span class="badge badge-success">✓ Connected</span>
+                            <div style="margin-top: 10px;">
+                                <p style="margin: 5px 0; font-size: 12px;"><strong>Hooks:</strong></p>
+                                <ul style="margin: 0; padding-left: 20px; font-size: 12px;">
+                                    <li>Vendor events</li>
+                                    <li>Booking integration</li>
+                                    <li>Review sync</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-top: 20px; border: none; padding: 0;">
+                        <h3 style="margin-top: 0;">API Documentation</h3>
+                        <p>For developers: Full API documentation for custom integrations</p>
+                        <button class="btn btn-secondary">View API Docs →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="page-settings" class="page-content" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Plugin Settings</h2>
+                    </div>
+
+                    <div class="tab-nav">
+                        <button class="active" onclick="switchTab('general-settings')">General</button>
+                        <button onclick="switchTab('qr-settings')">QR Settings</button>
+                        <button onclick="switchTab('security')">Security</button>
+                    </div>
+
+                    <div id="tab-general-settings" class="tab-content active">
+                        <div class="form-group">
+                            <label>Plugin License Key</label>
+                            <input type="password" placeholder="Enter your license key" value="BODROCK-XXXX-XXXX-XXXX" />
+                            <small style="color: #666; display: block; margin-top: 5px;">Valid until: December 31, 2025</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>QR Storage Directory</label>
+                            <input type="text" value="/wp-content/plugins/bodrock-qr-manager/qr-codes/" disabled />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Default Event Timezone</label>
+                            <select>
+                                <option>Africa/Lagos (GMT+1)</option>
+                                <option>Africa/Johannesburg</option>
+                                <option>UTC</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" checked /> Allow duplicate QR scans
+                            </label>
+                            <small style="color: #666; display: block; margin-top: 5px;">If unchecked, system will prevent re-scanning of same QR code</small>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="alert('Settings saved!')">Save Settings</button>
+                    </div>
+
+                    <div id="tab-qr-settings" class="tab-content" style="display: none;">
+                        <div class="form-group">
+                            <label>QR Code Size</label>
+                            <select>
+                                <option selected>200x200px (Standard)</option>
+                                <option>300x300px (Large)</option>
+                                <option>100x100px (Small)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>QR Code Format</label>
+                            <select>
+                                <option selected>PNG (Recommended)</option>
+                                <option>SVG</option>
+                                <option>JPG</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Error Correction Level</label>
+                            <select>
+                                <option>Low (7%)</option>
+                                <option selected>Medium (15%)</option>
+                                <option>High (30%)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" checked /> Include logo in QR code
+                            </label>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="alert('QR settings saved!')">Save Settings</button>
+                    </div>
+
+                    <div id="tab-security" class="tab-content" style="display: none;">
+                        <div class="form-group">
+                            <label>API Key</label>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="password" value="sk_live_xxxxxxxxxxxxxxxxxxxx" style="flex: 1;" />
+                                <button class="btn btn-secondary">Regenerate</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Enable Two-Factor Auth</label>
+                            <input type="checkbox" checked />
+                        </div>
+
+                        <div class="form-group">
+                            <label>QR Code Encryption</label>
+                            <select>
+                                <option>None</option>
+                                <option selected>AES-256</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Data Retention</label>
+                            <select>
+                                <option selected>30 days</option>
+                                <option>60 days</option>
+                                <option>90 days</option>
+                                <option>Forever</option>
+                            </select>
+                            <small style="color: #666; display: block; margin-top: 5px;">How long to keep guest check-in records</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>GDPR Compliance</label>
+                            <input type="checkbox" checked /> Enable GDPR data export/deletion features
+                        </div>
+
+                        <button class="btn btn-primary" onclick="alert('Security settings saved!')">Save Settings</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Modal -->
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Event</h2>
+                <button class="modal-close" onclick="closeModal('eventModal')">&times;</button>
+            </div>
+
+            <div class="form-group">
+                <label>Event Name *</label>
+                <input type="text" placeholder="e.g., Sarah & John's Wedding" />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Event Date *</label>
+                    <input type="date" />
+                </div>
+                <div class="form-group">
+                    <label>Event Time *</label>
+                    <input type="time" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Venue/Location *</label>
+                <input type="text" placeholder="e.g., Lekki Gardens, Lagos" />
+            </div>
+
+            <div class="form-group">
+                <label>Expected Guests *</label>
+                <input type="number" placeholder="100" />
+            </div>
+
+            <div class="form-group">
+                <label>Event Description</label>
+                <textarea placeholder="Add event details..."></textarea>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-primary" onclick="alert('Event created!'); closeModal('eventModal')">Create Event</button>
+                <button class="btn btn-secondary" onclick="closeModal('eventModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Guest Modal -->
+    <div id="addGuestModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Guest</h2>
+                <button class="modal-close" onclick="closeModal('addGuestModal')">&times;</button>
+            </div>
+
+            <div class="form-group">
+                <label>Full Name *</label>
+                <input type="text" placeholder="Guest name" />
+            </div>
+
+            <div class="form-group">
+                <label>Email *</label>
+                <input type="email" placeholder="guest@example.com" />
+            </div>
+
+            <div class="form-group">
+                <label>Phone</label>
+                <input type="tel" placeholder="+234..." />
+            </div>
+
+            <div class="form-group">
+                <label>Select Event *</label>
+                <select>
+                    <option>Sarah & John Wedding</option>
+                    <option>Chioma Birthday</option>
+                </select>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-primary" onclick="alert('Guest added! QR code will be generated.'); closeModal('addGuestModal')">Add Guest</button>
+                <button class="btn btn-secondary" onclick="closeModal('addGuestModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CSV Import Modal -->
+    <div id="csvImportModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Import Guests from CSV</h2>
+                <button class="modal-close" onclick="closeModal('csvImportModal')">&times;</button>
+            </div>
+
+            <div class="alert alert-info">
+                <strong>CSV Format:</strong> name, email, phone, event_name
+            </div>
+
+            <div class="form-group">
+                <label>CSV File</label>
+                <input type="file" accept=".csv" />
+                <small style="color: #666; display: block; margin-top: 5px;">Maximum 5000 guests per import</small>
+            </div>
+
+            <div class="form-group">
+                <label>Event (for this batch)</label>
+                <select>
+                    <option>Sarah & John Wedding</option>
+                    <option>Chioma Birthday</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" checked /> Automatically generate QR codes
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" checked /> Send invitation emails
+                </label>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-primary" onclick="alert('CSV import started! 120 guests being processed...'); closeModal('csvImportModal')">Import Guests</button>
+                <button class="btn btn-secondary" onclick="closeModal('csvImportModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let activePage = 'dashboard';
+
+        function switchPage(page) {
+            // Hide all pages
+            document.querySelectorAll('.page-content').forEach(el => el.style.display = 'none');
+            
+            // Show selected page
+            const pageEl = document.getElementById('page-' + page);
+            if (pageEl) pageEl.style.display = 'block';
+            
+            // Update nav
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+            event.target.closest('.nav-link')?.classList.add('active');
+            
+            activePage = page;
+
+            // Initialize charts if needed
+            if (page === 'dashboard') setTimeout(initDashboardChart, 100);
+            if (page === 'analytics') setTimeout(initAnalyticsCharts, 100);
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('[id^="tab-"]').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.getElementById('tab-' + tab)?.classList.add('active');
+
+            document.querySelectorAll('.tab-nav button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target?.classList.add('active');
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function togglePluginActivation() {
+            const btn = document.getElementById('pluginToggle');
+            if (btn.textContent.includes('Active')) {
+                btn.textContent = '⚪ Inactive';
+                btn.classList.remove('btn-success');
+                btn.classList.add('btn-secondary');
+                alert('Plugin deactivated. Your events and data are preserved.');
+            } else {
+                btn.textContent = '✓ Active';
+                btn.classList.remove('btn-secondary');
+                btn.classList.add('btn-success');
+                alert('Plugin activated successfully!');
+            }
+        }
+
+        function initDashboardChart() {
+            const ctx = document.getElementById('dashboardChart');
+            if (!ctx) return;
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Checked In', 'Pending', 'Declined'],
+                    datasets: [{
+                        data: [287, 45, 10],
+                        backgroundColor: ['#10a981', '#fbbf24', '#ef4444']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+        function initAnalyticsCharts() {
+            const ctx1 = document.getElementById('analyticsChart1');
+            const ctx2 = document.getElementById('analyticsChart2');
+
+            if (ctx1) {
+                new Chart(ctx1, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Sarah & John', 'Chioma', 'Tech Conf'],
+                        datasets: [{
+                            label: 'Check-ins',
+                            data: [105, 72, 445],
+                            backgroundColor: '#2271b1'
+                        }]
+                    },
+                    options: { responsive: true, indexAxis: 'y' }
+                });
+            }
+
+            if (ctx2) {
+                new Chart(ctx2, {
+                    type: 'line',
+                    data: {
+                        labels: ['2:00', '2:15', '2:30', '2:45', '3:00', '3:15', '3:30'],
+                        datasets: [{
+                            label: 'Check-ins',
+                            data: [5, 12, 25, 40, 55, 68, 80],
+                            borderColor: '#2271b1',
+                            tension: 0.4,
+                            fill: false
+                        }]
+                    },
+                    options: { responsive: true }
+                });
+            }
+        }
+
+        // Modal close on click outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.classList.remove('active');
+            });
+        });
+
+        // Initial dashboard chart
+        setTimeout(initDashboardChart, 100);
+    </script>
+</body>
+</html>
