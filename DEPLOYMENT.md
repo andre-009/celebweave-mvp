@@ -1,4 +1,4 @@
-# CelebWeave Deployment Guide 🚀
+# Weave Deployment Guide 🚀
 
 Complete step-by-step instructions for deploying CelebWeave to production.
 
