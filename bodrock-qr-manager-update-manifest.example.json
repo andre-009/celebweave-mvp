@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "download_url": "https://bodrock.io/updates/bodrock-qr-manager-1.0.0.zip",
+  "url": "https://bodrock.io/plugins/qr-manager",
+  "requires": "5.0",
+  "tested": "6.6",
+  "requires_php": "7.4",
+  "last_updated": "2026-07-04",
+  "sections": {
+    "description": "Complete event QR code management system for WordPress.",
+    "changelog": "<h4>1.0.0</h4><ul><li>Initial release</li></ul>"
+  }
+}
